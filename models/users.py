@@ -3,23 +3,25 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 mydb = get_connection()
 
-class User:
 
-    def __init__(self, 
-                 username, 
-                 password,
-                 first_name = '',
-                 last_name = '',
-                 email = '',
-                 image = '',
-                 role='',
-                 id = None):
+class User:
+    def __init__(
+        self,
+        username,
+        password,
+        email,
+        first_name="",
+        last_name="",
+        image="",
+        role="customer",
+        id=None,
+    ):
         self.id = id
         self.username = username
         self.password = password
+        self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.email = email
         self.role = role
         self.image = image
 
@@ -28,21 +30,21 @@ class User:
         if self.id is None:
             with mydb.cursor() as cursor:
                 self.password = generate_password_hash(self.password)
-                sql = "INSERT INTO users(username, password) VALUES(%s, %s)"
-                val = (self.username, self.password)
+                sql = "INSERT INTO users(username, password, email) VALUES(%s, %s, %s)"
+                val = (self.username, self.password, self.email)
                 cursor.execute(sql, val)
                 mydb.commit()
                 self.id = cursor.lastrowid
                 return self.id
         else:
             with mydb.cursor() as cursor:
-                sql = 'UPDATE users SET first_name = %s, last_name = %s, email = %s, image = %s '
-                sql += 'WHERE id = %s'
+                sql = "UPDATE users SET first_name = %s, last_name = %s, email = %s, image = %s "
+                sql += "WHERE id = %s"
                 val = (self.first_name, self.last_name, self.email, self.image, self.id)
                 cursor.execute(sql, val)
                 mydb.commit()
                 return self.id
-            
+
     def delete(self):
         with mydb.cursor() as cursor:
             sql = f"DELETE FROM users WHERE id = { self.id }"
@@ -59,18 +61,46 @@ class User:
             user = cursor.fetchone()
 
             if user:
-                user = User(username=user["username"], #username
-                            password=user["password"], #password
-                            first_name=user["first_name"], #first_name
-                            last_name=user["last_name"], #last_name
-                            email=user["email"], #email
-                            image=user["image"], #image
-                            role=user["role"],
-                            id=id)
+                user = User(
+                    username=user["username"],  # username
+                    password=user["password"],  # password
+                    first_name=user["first_name"],  # first_name
+                    last_name=user["last_name"],  # last_name
+                    email=user["email"],  # email
+                    image=user["image"],  # image
+                    role=user["role"],
+                    id=id,
+                )
                 return user
-            
+
             return None
-    
+
+    @staticmethod
+    def check_email(email):
+        with mydb.cursor(dictionary=True) as cursor:
+            sql = f"SELECT * FROM users WHERE email = '{ email }'"
+            cursor.execute(sql)
+
+            user = cursor.fetchone()
+
+            if user:
+                return "User exist"
+            else:
+                return None
+
+    @staticmethod
+    def check_username(username):
+        with mydb.cursor(dictionary=True) as cursor:
+            sql = f"SELECT * FROM users WHERE username = '{ username }'"
+            cursor.execute(sql)
+
+            user = cursor.fetchone()
+
+            if user:
+                return "User exist"
+            else:
+                return None
+
     @staticmethod
     def get_by_password(username, password):
         with mydb.cursor(dictionary=True) as cursor:
@@ -78,7 +108,7 @@ class User:
             val = (username,)
             cursor.execute(sql, val)
             user = cursor.fetchone()
-            
+
             if user != None:
                 if check_password_hash(user["password"], password):
                     return User.__get__(user["id"])
@@ -93,13 +123,15 @@ class User:
             result = cursor.fetchall()
             for user in result:
                 users.append(
-                    User(username=user["username"],
-                         password=user["password"],
-                         email=user["email"],
-                         first_name=user["first_name"],
-                         last_name=user["last_name"],
-                         role=user["role"],
-                         id=user["id"])
+                    User(
+                        username=user["username"],
+                        password=user["password"],
+                        email=user["email"],
+                        first_name=user["first_name"],
+                        last_name=user["last_name"],
+                        role=user["role"],
+                        id=user["id"],
+                    )
                 )
             return users
 

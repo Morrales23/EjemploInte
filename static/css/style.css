@@ -101,8 +101,7 @@ nav li a:hover {
 }
 
 #category {
-    background-color: rgb(128, 240, 221);
-    background-color: rgb(128, 240, 221);
+    background-color: rgb(162, 187, 183);
     width: 50%;
     padding: 1px;
     position: fixed;
@@ -111,12 +110,12 @@ nav li a:hover {
 }
 
 #description {
-    background-color: rgb(128, 240, 221);
+    background-color: rgb(162, 187, 183);
     width: 50%;
     padding: 1px;
     position: fixed;
     text-align: center;
-    margin-top: 8px;
+    margin-top: 5px;
     margin-left: 3px;
 
 }
