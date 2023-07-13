@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Agregar Categoria
+    
+{% endblock %}
+
+{% block content%}
+
+<form method="post">
+    {{ form.csrf_token }}
+    <div>
+        {{ form.category.label }}
+        {{ form.category() }}
+        {% if form.category.erros %}
+        {% for error in form.category.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div>
+        {{ form.description.label }}
+        {{ form.description() }}
+        {% if form.description.erros %}
+        {% for error in form.description.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    </div>
+    <div>
+        {{ form.submit(class="btn btn-success") }}
+    </div>
+</form>
+<a href="{{ url_for('category.categories' )}}" class="btn btn-warning">Regresar</a>
+{% endblock content%} 

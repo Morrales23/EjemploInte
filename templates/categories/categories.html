@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Categorias
+    
+{% endblock %}
+
+{% block content %}
+<h1>Categorias Page</h1>
+
+    <h2>Lista de categorias</h2>
+
+    <a href="{{ url_for('category.create_cat') }}" class="btn btn.success">Nueva Categoria</a>
+
+    <table id="categories">
+        <thead>
+            <th>Id</th>
+            <th>category</th>
+            <th>Descripcion</th>
+            <th>Actions</th>
+        </thead>
+    <tbody>
+        {% for cat in categories %}
+        <tr>
+            <td>{{ cat.id }}</td>
+            <td>{{ cat.category }}</td>
+            <td>{{ cat.description }}</td>
+            <td>
+                <a href="{{ url_for('category.update_cat', id=cat.id) }}">
+                <i class='fa fa-refresh fa-spin'></i>  
+            </a> /
+            <form method="post" action="{{ url_for('category.delete_cat', id=cat.id) }}">
+                <button type="submit" onclick="return confirm('seguro')">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

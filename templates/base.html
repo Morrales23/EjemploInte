@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body>
+    <header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home.home') }}">Home</a></li>
+            <li><a href="{{ url_for('home.about') }}">about</a></li>
+            <li><a href="{{ url_for('home.contact') }}">contact</a></li>
+            <li><a href="{{ url_for('category.categories') }}">categories</a></li>
+            
+            {% if user %}
+            <li><a href="">Logout</a></li>
+            {% else %}
+            <li><a href="">Login</a></li>
+            <li><a href="">Registro</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    </header >
+
+
+    <section class="container">
+        {% block content %}
+            
+        {% endblock %}
+
+    </section>
+    <footer>
+        <p>Copyright @RubenMora23</p>
+    </footer>
+</body>
+</html>
